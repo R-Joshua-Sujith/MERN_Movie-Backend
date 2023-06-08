@@ -23,6 +23,17 @@ app.get("/getMovies", async (req, res) => {
     }
 })
 
+app.get("/", async (req, res) => {
+    try {
+        const users = await MovieModel.find();
+        res.status(200).json(users);
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
+})
+
+
 app.post("/addMovie", async (req, res) => {
     const newMovie = new MovieModel({
         src: req.body.src,

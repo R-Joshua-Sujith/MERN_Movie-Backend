@@ -23,6 +23,15 @@ app.get("/getMovies", async (req, res) => {
     }
 })
 
+app.get("/topMovies", async (req, res) => {
+    try {
+        const movies = await MovieModel.find({ category2: 'top' });
+        res.status(200).json(movies);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+})
+
 app.get("/", async (req, res) => {
     try {
         const users = await MovieModel.find();
@@ -37,10 +46,12 @@ app.get("/", async (req, res) => {
 app.post("/addMovie", async (req, res) => {
     const newMovie = new MovieModel({
         src: req.body.src,
+        src2: req.body.src2,
         name: req.body.name,
         desc: req.body.desc,
         rating: req.body.rating,
         category: req.body.category,
+        category2: req.body.category2,
         link: req.body.link
     });
 

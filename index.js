@@ -4,6 +4,7 @@ const dotenv = require("dotenv")
 const cors = require("cors");
 const cron = require('node-cron');
 const MovieModel = require('./models/Movie')
+const axios = require('axios')
 
 dotenv.config();
 const app = express();
@@ -36,7 +37,7 @@ app.get('/scheduled-api', (req, res) => {
         });
 });
 
-cron.schedule('*/10 * * * *', () => {
+cron.schedule('* * * * *', () => {
     axios.get('http://localhost:5000/scheduled-api')
         .then(response => {
             console.log(response.data);

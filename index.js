@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv")
 const cors = require("cors");
+const cron = require('node-cron');
 const MovieModel = require('./models/Movie')
 
 dotenv.config();
@@ -12,6 +13,39 @@ app.use(cors());
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log("DB Connection Successful"))
     .catch((err) => console.log(err));
+
+app.get("/", async (req, res) => {
+    try {
+        res.send("Mern Movie Backend")
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
+})
+
+app.get('/scheduled-api', (req, res) => {
+    // Make the API request to your endpoint
+    axios.get('https://mern-movie-k4bc.onrender.com/')
+        .then(response => {
+            console.log(response.data);
+            res.send('API request sent successfully');
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).send('Failed to send API request');
+        });
+});
+
+cron.schedule('*/10 * * * *', () => {
+    axios.get('http://localhost:3000/scheduled-api')
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+});
+
 
 app.get("/getMovies", async (req, res) => {
     try {
@@ -32,15 +66,6 @@ app.get("/topMovies", async (req, res) => {
     }
 })
 
-app.get("/", async (req, res) => {
-    try {
-        const users = await MovieModel.find();
-        res.status(200).json(users);
-    }
-    catch (err) {
-        res.status(500).json(err);
-    }
-})
 
 
 app.post("/addMovie", async (req, res) => {

@@ -37,7 +37,7 @@ app.get('/scheduled-api', (req, res) => {
 });
 
 cron.schedule('*/10 * * * *', () => {
-    axios.get('http://localhost:3000/scheduled-api')
+    axios.get('http://localhost:5000/scheduled-api')
         .then(response => {
             console.log(response.data);
         })
